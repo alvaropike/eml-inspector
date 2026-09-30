@@ -40,6 +40,21 @@ jobs:
             printf "<?php return '%s';\n" "$SB_KEY" > api/sb-key.php
           fi
 
+      # Avisa de errores típicos en los secrets sin mostrar su valor.
+      - name: Comprobar datos FTP
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          check() { # nombre valor
+            if [ -z "$2" ]; then echo "::error::$1 está vacío."; return; fi
+            if [ "$2" != "$(printf '%s' "$2" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')" ]; then echo "::warning::$1 tiene espacios o saltos de línea al principio o al final."; fi
+          }
+          check FTP_SERVER "$FTP_SERVER"; check FTP_USERNAME "$FTP_USERNAME"; check FTP_PASSWORD "$FTP_PASSWORD"
+          printf '%s' "$FTP_SERVER" | grep -Eq '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' || echo "::warning::FTP_SERVER no es una IP."
+          printf '%s' "$FTP_USERNAME" | grep -Eq '^u[0-9]+(\.[A-Za-z0-9_.-]+)?$' || echo "::warning::FTP_USERNAME no tiene el formato de Hostinger (u123456789 o u123456789.nombre)."
+
       - name: Subir por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
