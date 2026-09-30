@@ -878,6 +878,15 @@
         actions: ['Confirma con el remitente por otro canal (teléfono, web oficial)', 'Revisa los enlaces y adjuntos marcados antes de usarlos'],
       };
     }
+    // Puntuación baja (las evidencias a favor restan), pero con señales que no se pueden pasar por alto.
+    if (high.length || med.length) {
+      const first = (high[0] || med[0]).title;
+      return {
+        title: high.length ? `Riesgo bajo, pero con ${high.length === 1 ? 'una señal grave' : plural(high.length, 'señal grave', 'señales graves')}` : 'Riesgo bajo, pero con señales a revisar',
+        text: `La puntuación es baja${authOk ? ' porque el remitente está autenticado' : ''}, pero ${high.length + med.length === 1 ? `hay algo que conviene revisar: «${first}»` : `hay ${plural(high.length + med.length, 'señal', 'señales')} que conviene revisar, como «${first}»`}.`,
+        actions: ['Revisa los motivos marcados antes de fiarte del correo', ...(entry.email.attached ? ['No te fíes del remitente que muestra sólo porque aparezca como autenticado'] : []), 'Mantén la precaución habitual con enlaces y adjuntos'],
+      };
+    }
     if (entry.email.attached) {
       return {
         title: 'Riesgo bajo, pero su remitente no se puede comprobar',
@@ -893,7 +902,7 @@
       };
     }
     return {
-      title: authOk && !med.length ? 'Sin señales de riesgo relevantes' : 'Riesgo bajo',
+      title: authOk ? 'Sin señales de riesgo relevantes' : 'Riesgo bajo',
       text: authOk ? `El remitente está autenticado (${s.relay ? 'según Apple, que lo reenvió' : s.dmarc === 'pass' ? 'DMARC correcto' : 'validado por Microsoft'}) y no hay indicios claros de engaño.` : 'No hay indicios claros de engaño, aunque la autenticación no es completa.',
       actions: ['Mantén la precaución habitual con enlaces y adjuntos'],
     };
