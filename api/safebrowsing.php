@@ -70,6 +70,8 @@ $ch = curl_init(ENDPOINT . '?' . $query);
 curl_setopt_array($ch, [
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_HEADER => false,
+  // Si la clave está restringida por sitio web en Google Cloud, este es el sitio que se presenta.
+  CURLOPT_REFERER => 'https://' . preg_replace('/:\d+$/', '', $host) . '/',
   CURLOPT_CONNECTTIMEOUT => 5,
   CURLOPT_TIMEOUT => 15,
 ]);
