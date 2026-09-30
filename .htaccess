@@ -1,7 +1,4 @@
-# Fuerza HTTPS: la IA local del navegador y crypto.subtle necesitan un contexto seguro.
-RewriteEngine On
-RewriteCond %{HTTPS} !=on
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# HTTPS lo fuerza Cloudflare, delante del hosting: redirigir aquí provocaría un bucle con SSL flexible.
 
 # Estado interno del despliegue por FTP: no se sirve.
 <Files ".ftp-deploy-sync-state.json">

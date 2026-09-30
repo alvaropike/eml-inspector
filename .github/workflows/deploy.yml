@@ -2,7 +2,8 @@
 #
 # Secrets del repositorio (Settings › Secrets and variables › Actions):
 #   GOOGLE_SAFE_BROWSER  clave de la Safe Browsing API; va a api/sb-key.php, que no se puede descargar
-#   FTP_SERVER           servidor FTP de hPanel (Archivos › Cuentas FTP), p. ej. ftp.alvaropiquerastrenado.com
+#   FTP_SERVER           IP de FTP de hPanel (Archivos › Cuentas FTP); el dominio pasa por Cloudflare y
+#                        ftp.<dominio> no llega al hosting
 #   FTP_USERNAME         usuario de una cuenta FTP cuyo directorio sea la carpeta del subdominio
 #   FTP_PASSWORD         contraseña de esa cuenta
 # Variable opcional FTP_SERVER_DIR: carpeta de destino dentro de la cuenta FTP (por defecto, su raíz).
@@ -24,7 +25,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Configuración del sitio
         env:
@@ -46,6 +47,9 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
+          # El certificado FTPS de Hostinger no es del nombre ni de la IP a la que se conecta:
+          # se cifra igualmente, pero sin validar el certificado.
+          security: loose
           server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
           exclude: |
             **/.git*

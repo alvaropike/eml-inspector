@@ -35,9 +35,11 @@ foreach (['HTTP_ORIGIN', 'HTTP_REFERER'] as $h) {
   }
 }
 
-// Límite por IP, en un fichero temporal por IP y ventana.
+// Límite por IP, en un fichero temporal por IP y ventana. Detrás de Cloudflare, REMOTE_ADDR es
+// la del nodo de Cloudflare y la del visitante viene en CF-Connecting-IP.
+$ip = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
 $window = intdiv(time(), RATE_WINDOW);
-$counter = sys_get_temp_dir() . '/eml-sb-' . hash('sha256', ($_SERVER['REMOTE_ADDR'] ?? '') . '|' . $window);
+$counter = sys_get_temp_dir() . '/eml-sb-' . hash('sha256', $ip . '|' . $window);
 $hits = (int) @file_get_contents($counter) + 1;
 @file_put_contents($counter, (string) $hits, LOCK_EX);
 if ($hits > RATE_LIMIT) {
