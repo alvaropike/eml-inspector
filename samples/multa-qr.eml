@@ -1,0 +1,56 @@
+Received: from smtp.notificaciones-dgt.info (unknown [45.155.205.99])
+        by mx.empresa-ejemplo.es (Postfix) with ESMTP id 1A2B3C4D5E
+        for <alvaro@empresa-ejemplo.es>; Tue, 29 Sep 2026 08:10:02 +0200 (CEST)
+Authentication-Results: mx.empresa-ejemplo.es;
+        spf=pass smtp.mailfrom=avisos@notificaciones-dgt.info;
+        dkim=none;
+        dmarc=none header.from=notificaciones-dgt.info
+X-Forefront-Antispam-Report: CIP:45.155.205.99;CTRY:NL;LANG:es;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:smtp.notificaciones-dgt.info;PTR:InfoDomainNonexistent;CAT:PHSH;SFS:(13230040);DIR:INB;
+X-Microsoft-Antispam: BCL:0;
+From: "DGT - Multas" <avisos@notificaciones-dgt.info>
+To: alvaro@empresa-ejemplo.es
+Subject: =?UTF-8?Q?Notificaci=C3=B3n_de_sanci=C3=B3n_pendiente_-_Expediente_2026-88412?=
+Date: Tue, 29 Sep 2026 08:10:00 +0200
+Message-ID: <88412.1759126200@notificaciones-dgt.info>
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="b1_qr"
+
+--b1_qr
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGJvZHkgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsIj4KPHA+PGI+RElSRUNDScOTTiBH
+RU5FUkFMIERFIFRSw4FGSUNPPC9iPjwvcD4KPHA+Tm90aWZpY2FjacOzbiBkZSBzYW5jacOzbiBw
+ZW5kaWVudGUgZGUgcGFnby4gRXhwZWRpZW50ZSAyMDI2LTg4NDEyLjwvcD4KPHA+RGlzcG9uZSBk
+ZSA8Yj40OCBob3JhczwvYj4gcGFyYSBhYm9uYXIgbGEgbXVsdGEgY29uIHVuYSByZWR1Y2Npw7Nu
+IGRlbCA1MCUuIFBhc2FkbyBlbCBwbGF6byBzZSBpbmljaWFyw6EgbGEgdsOtYSBkZSBhcHJlbWlv
+LjwvcD4KPHA+RXNjYW5lZSBlbCBzaWd1aWVudGUgY8OzZGlnbyBRUiBjb24gc3UgbcOzdmlsIHBh
+cmEgcmVhbGl6YXIgZWwgcGFnbzo8L3A+CjxwPjxpbWcgc3JjPSJjaWQ6cXItcGFnb0BkZ3QiIHdp
+ZHRoPSIyMjAiIGhlaWdodD0iMjIwIiBhbHQ9IlFSIj48L3A+CjxwIHN0eWxlPSJmb250LXNpemU6
+MTFweDtjb2xvcjojNzc3Ij5Fc3RlIG1lbnNhamUgc2UgaGEgZ2VuZXJhZG8gYXV0b23DoXRpY2Ft
+ZW50ZS4gTm8gcmVzcG9uZGEgYSBlc3RlIGNvcnJlby48L3A+CjwvYm9keT48L2h0bWw+
+
+--b1_qr
+Content-Type: image/png; name="pago.png"
+Content-Transfer-Encoding: base64
+Content-ID: <qr-pago@dgt>
+Content-Disposition: inline; filename="pago.png"
+
+iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADN0lEQVR4nO1cXW6zQAy0A1IfQcoB
+cpTtzaoeqTeAo+QAnwSPlYj8yT8LoU+liZqSnXmo2FBLxOvanllTFtqM/rDdhghGATgiAEcE4IgA
+HBGAIwJwxJ4cwYGamNsLE42xtKu8ZObXhzzeRsDoDo5IohiIRM4aB42IdM0nE1GlvWdl93MXCpcX
+4IgxJ4D+JEJ9e2F+G6q40huRMh70eJsAo1scUX9ZczozUTrXJD1XE6XhOGmmWAEuL8kRfUsk720l
+lAZLD9pW/J3H+w5gdI8c0WiPMNrVQBYDTM1UC42V54hrJQsuf35H9MYkWu0xtbNMg129SJALujjV
+eNTjbQOMbnEEyRpEzUTGOoJm2HKNDi4PPK8j2NjEq2oPnhmaiA2iUTWKnEGgR+xwc7ci/u4HEyUm
+Vyb8ThpMhZhIOpMn5l9Gjnj+iCCVpBY1ymJjiQPXr7q5fiAiStAshwtHHBjdHF/ECkaUDv8VVI19
+bu7P2OeoPGM8TsY+VZRgSUPLVkCkN5LRDFCxy9IjmJpPFhprDwv2z6gmThoK/ave+OXHO8DoQZ1l
+p01C531ENJX+w9hnNJXoI0oK2LHOXMPiQEPgXfXszpoJJ6g5XvbynTYBRgHfb9a6wOmjJelPVhsu
+3kLEXT3u6tt/dXwG79HzOoKyEDl5XXByobzCikiol85DY0gC7LOUqsExAaFTEaeJ+C3TTRHlpgsP
+3ct32gQYfdUsK20vRftJyoniSr2MzjK0Kngv8MxcgywV5I0P4TLETBcu7QpVoxQVOy05YkkF3jjk
+JdhncZ0l+dGWH4RbyrAosW5zPiZH1ShpPqK7ohm0OtLAfER572u0dr5V6yz2nBRmSWqesMJ8xA43
+9/YZKskMwxqMeWYiCAe4RmHvdJEN5tsxh6rYkSiW5PGQx9sIGN2Da8gsSvjHceWnX+tsAT2iDPZJ
++ZDLxan1+K3BuSkiorB3ukQrhNB4FE6d5DMvnadJH/WEk64SjZrcLvTaVvSs83W2RB+x/839SR+x
+wCRMDxB/VXy+8ce/0wFGd3yni+3VLV16wehsBjcDesTzxx7jP5PtYp8OMHLAEQE4IgBHBOCIABwR
++D1H/AfUUHk21hdY+gAAAABJRU5ErkJggg==
+
+--b1_qr--

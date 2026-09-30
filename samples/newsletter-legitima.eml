@@ -1,0 +1,44 @@
+Delivered-To: alvaro.ejemplo@gmail.com
+Received: by 2002:a05:6400:1234:b0:2a1:0:0 with SMTP id z9csp654321;
+        Tue, 29 Sep 2026 09:15:04 -0700 (PDT)
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@ejemplo-tienda.es header.s=news2026 header.b=Xy12Ab34;
+       spf=pass (google.com: domain of bounces@news.ejemplo-tienda.es designates 198.51.100.25 as permitted sender) smtp.mailfrom=bounces@news.ejemplo-tienda.es;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=ejemplo-tienda.es
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@ejemplo-tienda.es header.s=news2026 header.b=Xy12Ab34;
+       spf=pass (google.com: domain of bounces@news.ejemplo-tienda.es designates 198.51.100.25 as permitted sender) smtp.mailfrom=bounces@news.ejemplo-tienda.es;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=ejemplo-tienda.es
+Return-Path: <bounces@news.ejemplo-tienda.es>
+Received: from mta25.news.ejemplo-tienda.es (mta25.news.ejemplo-tienda.es. [198.51.100.25])
+        by mx.google.com with ESMTPS id h7si998877wrx.5.2026.09.29.09.15.03
+        for <alvaro.ejemplo@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Sep 2026 09:15:03 -0700 (PDT)
+Received: from app-internal-3 (app-internal-3 [192.168.20.13])
+        by mta25.news.ejemplo-tienda.es (Postfix) with ESMTPSA id 91B2F20055
+        for <alvaro.ejemplo@gmail.com>; Tue, 29 Sep 2026 16:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ejemplo-tienda.es; s=news2026;
+        h=from:to:subject:date:message-id:list-unsubscribe; bh=abc=; b=Xy12Ab34
+From: Tienda Ejemplo <novedades@ejemplo-tienda.es>
+To: alvaro.ejemplo@gmail.com
+Subject: =?ISO-8859-1?Q?Novedades_de_septiembre_=96_colecci=F3n_de_oto=F1o?=
+Date: Tue, 29 Sep 2026 18:15:00 +0200
+Message-ID: <nl-2026-09.abc123@ejemplo-tienda.es>
+List-Unsubscribe: <https://www.ejemplo-tienda.es/baja?u=abc>, <mailto:baja@ejemplo-tienda.es>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+MIME-Version: 1.0
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGJvZHkgc3R5bGU9ImZvbnQtZmFtaWx5OlNlZ29lIFVJLEFyaWFsIj48aDEgc3R5bGU9
+ImNvbG9yOiMyZjViZDMiPk5vdmVkYWRlcyBkZSBzZXB0aWVtYnJlPC9oMT4KPHA+SG9sYSDBbHZh
+cm8sIGVzdGFzIHNvbiBsYXMgbm92ZWRhZGVzIGRlbCBtZXMgZW4gbnVlc3RybyBibG9nOjwvcD4K
+PHVsPjxsaT48YSBocmVmPSJodHRwczovL2Jsb2cuZWplbXBsby10aWVuZGEuZXMvYXJ0aWN1bG9z
+L290b25vLTIwMjYiPkNvbGVjY2nzbiBkZSBvdG/xbyAyMDI2PC9hPjwvbGk+CjxsaT48YSBocmVm
+PSJodHRwczovL3d3dy5lamVtcGxvLXRpZW5kYS5lcy9vZmVydGFzP3V0bV9zb3VyY2U9bmV3c2xl
+dHRlciI+T2ZlcnRhcyBkZSBsYSBzZW1hbmE8L2E+PC9saT48L3VsPgo8cD5HcmFjaWFzIHBvciBs
+ZWVybm9zLjwvcD4KPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2NvbG9yOiM3NzciPlJlY2liZXMg
+ZXN0ZSBjb3JyZW8gcG9ycXVlIHRlIHN1c2NyaWJpc3RlIGVuIGVqZW1wbG8tdGllbmRhLmVzLiA8
+YSBocmVmPSJodHRwczovL3d3dy5lamVtcGxvLXRpZW5kYS5lcy9iYWphP3U9YWJjIj5EYXJzZSBk
+ZSBiYWphPC9hPjwvcD4KPC9ib2R5PjwvaHRtbD4=

