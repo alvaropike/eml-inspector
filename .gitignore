@@ -1,3 +1,7 @@
 # Contiene la clave de API de Safe Browsing: no se sube.
 config.js
 api/sb-key.php
+
+# Worker del buzón de análisis
+worker/node_modules/
+worker/.wrangler/

@@ -1,0 +1,16 @@
+{
+  "name": "eml-inspector-buzon",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node test/local.mjs",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "dependencies": {
+    "linkedom": "^0.18.13"
+  },
+  "devDependencies": {
+    "wrangler": "^4.145.0"
+  }
+}

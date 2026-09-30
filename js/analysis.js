@@ -855,6 +855,63 @@
   const SEV_ORDER = { high: 0, medium: 1, low: 2, info: 3, ok: 4 };
   const sortFindings = list => list.sort((a, b) => SEV_ORDER[a.sev] - SEV_ORDER[b.sev]);
 
+  // Conclusión en lenguaje llano a partir de la puntuación y los hallazgos (texto plano).
+  // entry: { analysis, email, findings, level, trustVoided, voidedBy } tras scoreFindings.
+  function conclusion(entry) {
+    const s = entry.analysis.summary;
+    const high = entry.findings.filter(f => f.sev === 'high');
+    const med = entry.findings.filter(f => f.sev === 'medium');
+    // Si lo reenvía Apple, el DMARC del receptor es el de Apple: cuenta la autenticación del remitente real.
+    const senderAuth = s.relay ? s.senderAuth : s.dmarc === 'pass' || s.msAuth === '1';
+    const authOk = senderAuth && !entry.trustVoided;
+    if (entry.level === 'alto') {
+      return {
+        title: 'Muy probablemente malicioso',
+        text: `Tiene ${plural(high.length, 'señal grave', 'señales graves')}${med.length ? ` y ${plural(med.length, 'señal', 'señales')} más a revisar` : ''}. Trátalo como un intento de phishing o fraude.`,
+        actions: ['No hagas clic en los enlaces ni abras los adjuntos', 'No respondas ni facilites datos o contraseñas', 'Repórtalo a tu equipo de seguridad y bórralo'],
+      };
+    }
+    if (entry.level === 'medio') {
+      return {
+        title: 'Sospechoso: revísalo antes de actuar',
+        text: `Hay ${plural(high.length + med.length, 'señal', 'señales')} que no ${high.length + med.length === 1 ? 'encaja' : 'encajan'} con un correo legítimo, aunque no es concluyente.`,
+        actions: ['Confirma con el remitente por otro canal (teléfono, web oficial)', 'Revisa los enlaces y adjuntos marcados antes de usarlos'],
+      };
+    }
+    if (entry.email.attached) {
+      return {
+        title: 'Riesgo bajo, pero su remitente no se puede comprobar',
+        text: 'No hay indicios claros de engaño, pero este correo venía adjunto a otro: sus cabeceras de autenticación y de ruta pueden estar inventadas.',
+        actions: ['No te fíes del remitente que muestra sólo porque aparezca como autenticado', 'Mantén la precaución habitual con enlaces y adjuntos'],
+      };
+    }
+    if (entry.trustVoided && senderAuth) {
+      return {
+        title: 'Riesgo bajo, pero revisa quién lo envía',
+        text: `El correo está autenticado, pero eso sólo prueba que viene de ${entry.analysis.senderDomain || entry.analysis.fromDomain}, y ese dominio no inspira confianza (${entry.voidedBy.join("; ")}).`,
+        actions: ['Comprueba que el dominio del remitente es realmente de quien dice ser', 'Mantén la precaución habitual con enlaces y adjuntos'],
+      };
+    }
+    return {
+      title: authOk && !med.length ? 'Sin señales de riesgo relevantes' : 'Riesgo bajo',
+      text: authOk ? `El remitente está autenticado (${s.relay ? 'según Apple, que lo reenvió' : s.dmarc === 'pass' ? 'DMARC correcto' : 'validado por Microsoft'}) y no hay indicios claros de engaño.` : 'No hay indicios claros de engaño, aunque la autenticación no es completa.',
+      actions: ['Mantén la precaución habitual con enlaces y adjuntos'],
+    };
+  }
+
+  // Los 3 motivos de la conclusión: el más grave de cada categoría, para que no sean tres variantes
+  // de lo mismo (SPF, DKIM y DMARC fallan a la vez). Si hay menos categorías, se completa con el resto.
+  function topReasons(findings, n = 3) {
+    const bad = findings.filter(f => f.sev === 'high' || f.sev === 'medium');
+    const seen = new Set(), picked = [];
+    for (const f of bad) {
+      const key = f.category === 'dkim' ? 'auth' : f.category;
+      if (picked.length < n && !seen.has(key)) { seen.add(key); picked.push(f); }
+    }
+    for (const f of bad) if (picked.length < n && !picked.includes(f)) picked.push(f);
+    return picked;
+  }
+
   // ---------- análisis principal ----------
 
   const SEV_WEIGHT = { high: 25, medium: 10, low: 4, info: 0, ok: 0 };
@@ -1240,7 +1297,7 @@
 
   const Analysis = {
     analyze, parseAddressList, domainOf, orgDomain, sharedHostOf, isPrivateIP, parseDate, htmlToText, parseAuthResults,
-    analyzeURL, lookalike, scoreFindings, sortFindings, SEV_WEIGHT, pointsOf, domainProblems,
+    analyzeURL, lookalike, scoreFindings, sortFindings, SEV_WEIGHT, pointsOf, domainProblems, conclusion, topReasons,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = Analysis;
   global.Analysis = Analysis;

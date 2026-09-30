@@ -170,6 +170,20 @@ La web se publica en `https://eml.alvaropiquerastrenado.com` (hosting compartido
 
 El despliegue escribe un `config.js` sin clave que apunta a `api/safebrowsing.php`, y guarda la clave en `api/sb-key.php`. Ese proxy PHP recibe sólo prefijos de hash, añade la clave en el servidor y devuelve la respuesta de Google, así que la clave nunca llega al navegador. Sólo acepta peticiones de la propia web, como mucho 400 prefijos por petición y 120 peticiones por IP cada 10 minutos. Como la llamada a Google sale del servidor, la clave se restringe en Google Cloud sólo a la Safe Browsing API, no por sitio web. Si un visitante pone su propia clave en Ajustes, se usa la suya directamente.
 
+## Buzón de análisis por correo
+
+Quien escribe a `eml@eml.alvaropiquerastrenado.com` con un correo adjunto (`.eml`, `.msg` o «reenviar como archivo adjunto») recibe el informe como respuesta. Si el mensaje no trae ningún correo adjunto, la respuesta explica cómo adjuntarlo.
+
+Funciona con Cloudflare Email Routing y el Worker de `worker/`, que usa los mismos `mime.js`, `msg.js`, `analysis.js`, `dkim.js`, `safebrowsing.js` y `online.js` que la web (con `linkedom` en lugar de `DOMParser`):
+
+- **Recepción:** Email Routing está activado sólo en el subdominio `eml` (MX de Cloudflare). El dominio principal sigue con los MX de Hostinger, así que su correo no cambia. En el panel de Cloudflare, Email Routing del dominio principal aparece como «misconfigured»: es a propósito, y no hay que «arreglarlo», porque cambiaría esos MX.
+- **Respuesta:** con `message.reply()`, que sólo contesta al remitente del sobre y exige que su correo pase DMARC, así que nadie puede usar el buzón para enviar informes a un tercero. Cloudflare no permite responder desde un subdominio, por lo que las respuestas salen de `eml@alvaropiquerastrenado.com`, con `Reply-To` al buzón. Para que pasen el DMARC estricto del dominio, su SPF incluye `include:_spf.mx.cloudflare.net` y está publicada la clave DKIM de Cloudflare en `cf2024-1._domainkey`.
+- **Informe:** veredicto en el asunto; conclusión, motivos, enlaces y adjuntos sospechosos y datos del correo en el cuerpo. Las URLs, los dominios y las IPs van desactivados (`hxxps[:]//evil[.]com`).
+- **Límites:** hasta 3 correos adjuntos por mensaje y 3 mensajes por minuto de cada remitente. No contesta a respuestas automáticas, rebotes ni listas de correo. No guarda nada: sólo registra métricas (número de correos, consultas y tiempo).
+- **Plan gratuito de Workers:** como mucho 50 subpeticiones por ejecución, así que las comprobaciones en línea se cortan en 45 y sólo se consultan 4 dominios de enlaces (en la web, 15). Safe Browsing pasa por el proxy de la web. No se leen códigos QR. El límite nominal de CPU es 10 ms; en las pruebas el análisis ha usado entre 56 y 141 ms sin que Cloudflare lo cortara. Si empezara a cortarlo, habría que pasar al plan de pago.
+
+Desde `worker/`: `npm install`, `npm test` (analiza `samples/` y muestra el resultado), `npx wrangler dev` (prueba local: `POST /cdn-cgi/handler/email?from=…&to=…` con el mensaje) y `npx wrangler deploy`. El workflow de FTP no sube esta carpeta.
+
 ## Estructura
 
 ```
@@ -189,6 +203,7 @@ js/ai.js         Prompt/Summarizer/Translator/LanguageDetector con límites de t
 js/app.js        Interfaz
 js/vendor/jsQR.js  jsQR 1.4.0 (Apache-2.0)
 samples/         Correos de ejemplo
+worker/          Buzón de análisis por correo (Cloudflare Email Worker)
 ```
 
 `mime.js`, `msg.js`, `analysis.js`, `dkim.js`, `safebrowsing.js` y `online.js` también funcionan en Node 18 o superior. La canonicalización de Safe Browsing se ha contrastado con los ejemplos de la especificación de Google. El verificador DKIM se ha contrastado con firmas generadas por `dkimpy`, en todas las combinaciones de algoritmo y canonicalización. El lector de `.msg` se ha contrastado con `extract-msg` sobre ficheros generados por Outlook: asunto, texto, HTML (enlaces idénticos), adjuntos (mismo SHA-256) y Content-ID.

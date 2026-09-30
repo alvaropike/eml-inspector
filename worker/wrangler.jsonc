@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Buzón de análisis por correo (Email Routing → este Worker → respuesta con el informe).
+  "name": "eml-inspector-buzon",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-30",
+  // AsyncLocalStorage, para contar las subpeticiones de cada correo por separado.
+  "compatibility_flags": ["nodejs_als"],
+  // Sólo recibe correo: sin URL pública en workers.dev.
+  "workers_dev": false,
+  "preview_urls": false,
+  "vars": {
+    "SITE_URL": "https://eml.alvaropiquerastrenado.com",
+    // Remitente de las respuestas: Cloudflare no deja contestar desde el subdominio que recibe.
+    "REPLY_FROM": "eml@alvaropiquerastrenado.com",
+    // El proxy de la web añade la clave de Safe Browsing: el Worker no la necesita.
+    "SB_PROXY": "https://eml.alvaropiquerastrenado.com/api/safebrowsing.php"
+  },
+  // Como mucho 3 correos por minuto de cada remitente.
+  "ratelimits": [
+    { "name": "PER_SENDER", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } }
+  ],
+  "observability": { "enabled": true }
+}

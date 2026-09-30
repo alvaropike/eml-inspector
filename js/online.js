@@ -240,7 +240,7 @@
   // maliciosos responde 0.0.0.0 con el error extendido EDE(16) «Censored». No sirve como resolvedor
   // del análisis (a esos dominios les niega TXT y MX), pero sí como lista negra.
   const CF_SECURITY = { list: 'Cloudflare 1.1.1.2', zone: 'security.cloudflare-dns.com' };
-  const CF_SECURITY_IPS = ['1.1.1.2', '1.0.0.2'];
+  let cfSecurityURLs = ['https://1.1.1.2/dns-query', 'https://1.0.0.2/dns-query'];
 
   // Se pregunta a las dos IPs del servicio a la vez y vale la primera respuesta: en algunas redes
   // una de ellas no es alcanzable y la conexión se queda colgada hasta agotar el tiempo.
@@ -248,8 +248,8 @@
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(new DOMException('Tiempo de espera agotado', 'TimeoutError')), 8000);
     try {
-      return await Promise.any(CF_SECURITY_IPS.map(async ip => {
-        const r = await fetch(`https://${ip}/dns-query?name=${encodeURIComponent(domain)}&type=A`,
+      return await Promise.any(cfSecurityURLs.map(async url => {
+        const r = await fetch(`${url}?name=${encodeURIComponent(domain)}&type=A`,
           { signal: ctrl.signal, referrerPolicy: 'no-referrer', credentials: 'omit', headers: { accept: 'application/dns-json' } });
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
@@ -336,7 +336,7 @@
     return name => { const n = String(name || '').toLowerCase(); return [...tokens].some(t => n.includes(t)); };
   }
 
-  function collectTargets(entry) {
+  function collectTargets(entry, maxLinkDomains = 15) {
     const a = entry.analysis;
     const domains = new Map();
     const personal = personalMatcher(entry);
@@ -364,7 +364,7 @@
     // De los enlaces se consulta sólo el dominio registrable, nunca el host completo:
     // los subdominios únicos por destinatario podrían delatar que se ha abierto el correo.
     const linkDomains = [...new Set(a.links.map(l => l.host).filter(h => h && !/^\[?[\d.:]+\]?$/.test(h)).map(Analysis.orgDomain))];
-    linkDomains.slice(0, 15).forEach(d => addDomain(d, 'Enlace'));
+    linkDomains.slice(0, maxLinkDomains).forEach(d => addDomain(d, 'Enlace'));
 
     const ips = new Map();
     if (a.iocs.originIP && !/:/.test(a.iocs.originIP)) ips.set(a.iocs.originIP, { ip: a.iocs.originIP, roles: ['Origen'] });
@@ -429,11 +429,12 @@
     };
   }
 
-  async function run(entry, { onUpdate, safeBrowsingKey, safeBrowsingProxy, verifyAllDkim } = {}) {
+  // maxLinkDomains: cuántos dominios de enlaces se consultan (el buzón de análisis tiene un límite de peticiones).
+  async function run(entry, { onUpdate, safeBrowsingKey, safeBrowsingProxy, verifyAllDkim, maxLinkDomains } = {}) {
     const email = entry.email;
     const res = { startedAt: new Date(), done: false, provider, dkim: null, domains: {}, ips: {}, errors: [], safeBrowsing: null };
     const update = () => onUpdate && onUpdate(res);
-    const { domains, ips } = collectTargets(entry);
+    const { domains, ips } = collectTargets(entry, maxLinkDomains);
 
     const tasks = [];
     tasks.push((async () => {
@@ -754,5 +755,7 @@
     providers: DOH,
     setProvider(p) { if (DOH[p]) { provider = p; } },
     getProvider: () => provider,
+    // En un Worker de Cloudflare, 1.1.1.2 se consulta por nombre (una petición en lugar de dos).
+    setSecurityURLs(urls) { if (urls && urls.length) cfSecurityURLs = urls.slice(); },
   };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
