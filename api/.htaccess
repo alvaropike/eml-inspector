@@ -1,0 +1,4 @@
+# sb-key.php guarda la clave de Safe Browsing: no se sirve nunca.
+<Files "sb-key.php">
+  Require all denied
+</Files>

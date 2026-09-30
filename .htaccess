@@ -1,0 +1,11 @@
+# Fuerza HTTPS: la IA local del navegador y crypto.subtle necesitan un contexto seguro.
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Estado interno del despliegue por FTP: no se sirve.
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>
+
+Options -Indexes

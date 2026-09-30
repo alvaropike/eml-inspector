@@ -127,7 +127,8 @@ Necesita una clave de API propia: en [Google Cloud](https://console.cloud.google
 - En `config.js`, en la raíz del proyecto: `safeBrowsingKey: 'tu-clave'`. Vale para cualquier navegador que abra la herramienta desde esta carpeta. Tras editarlo, recarga con `Ctrl`+`F5`. No compartas ese fichero con la clave puesta.
 - En «Clave de Safe Browsing», en **Ajustes** de la pestaña *DNS y WHOIS*. Se guarda sólo en el `localStorage` de ese navegador y de esa dirección (`localhost:8000` y `127.0.0.1:8000` cuentan como distintas). Si tiene algo, se usa en lugar de la de `config.js`; si está vacío, el campo indica «usando config.js».
 
-Sin clave no se consulta.
+Sin clave no se consulta, salvo en la versión publicada (ver *Publicación*).
+
 
 - Detecta URLs y dominios que Google ya tiene catalogados como phishing, malware, software no deseado o aplicaciones dañinas. Un dominio del remitente en las listas suma 60 puntos, igual que un enlace, y anula las evidencias a favor si es el del From.
 - Al abrir un correo, las comprobaciones en línea esperan a que se lean los códigos QR, para consultar también sus enlaces. Si se lanzaron a mano antes, se repiten al aparecer enlaces nuevos. Que un enlace no figure no garantiza que sea seguro: las campañas recién lanzadas tardan en entrar en las listas.
@@ -163,11 +164,19 @@ Cada operación tiene botón de **Cancelar** y un contador de tiempo. Al cortars
 
 El modelo corre en el dispositivo: Gemini Nano en Chrome o Phi-4-mini en Edge. **Requisitos:** Chrome 138 o superior en escritorio, unos 22 GB libres y una GPU con más de 4 GB de VRAM (o 16 GB de RAM y 4 núcleos). Si la Prompt API no aparece, activa `chrome://flags/#prompt-api-for-gemini-nano` y `#optimization-guide-on-device-model`. El estado del modelo se consulta en `chrome://on-device-internals`.
 
+## Publicación
+
+La web se publica en `https://eml.alvaropiquerastrenado.com` (hosting compartido de Hostinger) con el workflow `.github/workflows/deploy.yml`, que en cada push a `main` sube los ficheros por FTP. Necesita estos secrets en el repositorio: `GOOGLE_SAFE_BROWSER` (clave de Safe Browsing), `FTP_SERVER`, `FTP_USERNAME` y `FTP_PASSWORD` (una cuenta FTP cuyo directorio sea la carpeta del subdominio). Si la cuenta FTP apunta a otra carpeta, la variable `FTP_SERVER_DIR` indica la de destino.
+
+El despliegue escribe un `config.js` sin clave que apunta a `api/safebrowsing.php`, y guarda la clave en `api/sb-key.php`. Ese proxy PHP recibe sólo prefijos de hash, añade la clave en el servidor y devuelve la respuesta de Google, así que la clave nunca llega al navegador. Sólo acepta peticiones de la propia web, como mucho 400 prefijos por petición y 120 peticiones por IP cada 10 minutos. Como la llamada a Google sale del servidor, la clave se restringe en Google Cloud sólo a la Safe Browsing API, no por sitio web. Si un visitante pone su propia clave en Ajustes, se usa la suya directamente.
+
 ## Estructura
 
 ```
 index.html
-config.js        Configuración local (clave de Safe Browsing)
+config.js        Configuración local (clave de Safe Browsing); no se sube al repositorio
+config.example.js  Plantilla de config.js
+api/safebrowsing.php  Proxy de Safe Browsing para la versión publicada (añade la clave en el servidor)
 css/styles.css
 js/mime.js       Parser MIME/RFC 5322 (multipart, base64, QP, RFC 2047/2231, charsets)
 js/msg.js        Lector de .msg (MS-CFB, propiedades MAPI, RTF comprimido LZFu y HTML encapsulado) y conversión a .eml

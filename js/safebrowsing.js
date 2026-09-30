@@ -196,9 +196,13 @@
     return res;
   }
 
-  async function search(prefixes, key, signal) {
+  // Con clave se consulta a Google directamente; sin ella, al proxy del servidor, que añade la
+  // suya sin que llegue al navegador (api/safebrowsing.php). La respuesta es la misma.
+  async function search(prefixes, key, signal, proxy) {
     const qs = prefixes.map(p => 'hashPrefixes=' + encodeURIComponent(p)).join('&');
-    const r = await fetch(`${ENDPOINT}?key=${encodeURIComponent(key)}&${qs}`, { signal, referrerPolicy: 'origin', credentials: 'omit' }); // sólo el origen: permite restringir la clave por sitio web
+    const r = key
+      ? await fetch(`${ENDPOINT}?key=${encodeURIComponent(key)}&${qs}`, { signal, referrerPolicy: 'origin', credentials: 'omit' }) // sólo el origen: permite restringir la clave por sitio web
+      : await fetch(`${proxy}?${qs}`, { signal, credentials: 'omit' });
     const isJson = /json/i.test(r.headers.get('content-type') || '');
     if (r.ok && !isJson) return decodeSearchResponse(new Uint8Array(await r.arrayBuffer()));
     const body = await r.json().catch(() => ({}));
@@ -213,8 +217,8 @@
     return body;
   }
 
-  // urls: [{ url, link? | domain?, … }] · devuelve { urls, domains, expressions, prefixes, matches: [{ …entrada, expression, threats }] }
-  async function check(urls, key, { signal } = {}) {
+  // urls: [{ url, link? | domain?, … }] · key: clave de API, o vacía para usar proxy · devuelve { urls, domains, expressions, prefixes, matches: [{ …entrada, expression, threats }] }
+  async function check(urls, key, { signal, proxy } = {}) {
     const items = [];
     const seenUrl = new Set();
     for (const it of urls) {
@@ -233,7 +237,7 @@
     const pending = allPrefixes.filter(p => !(cache.has(p) && cache.get(p).expires > now));
     for (let i = 0; i < pending.length; i += BATCH) {
       const batch = pending.slice(i, i + BATCH);
-      const res = await search(batch, key, signal);
+      const res = await search(batch, key, signal, proxy);
       const expires = Date.now() + parseDuration(res.cacheDuration);
       batch.forEach(p => cache.set(p, { expires, full: [] }));
       (res.fullHashes || []).forEach(fh => {

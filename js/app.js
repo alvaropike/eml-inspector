@@ -122,6 +122,8 @@
   // Clave de Safe Browsing: la del campo de la pestaña DNS y WHOIS o, si está vacío, la de config.js.
   const configSbKey = () => String((window.EML_CONFIG && window.EML_CONFIG.safeBrowsingKey) || '').trim();
   const sbKey = () => (state.settings.sbKey || '').trim() || configSbKey();
+  // En el servidor publicado, config.js apunta al proxy que añade la clave del sitio.
+  const sbProxy = () => String((window.EML_CONFIG && window.EML_CONFIG.safeBrowsingProxy) || '').trim();
 
   // Une los hallazgos del análisis local, de los QR y de las comprobaciones en línea.
   function rescore(entry) {
@@ -266,6 +268,7 @@
     try {
       const res = await Online.run(entry, {
         safeBrowsingKey: sbKey(),
+        safeBrowsingProxy: sbProxy(),
         verifyAllDkim: !!entry.verifyAllDkim,
         onUpdate: r => { entry.online = Object.assign(r, { running: !r.done }); scheduleOnlineRender(entry); },
       });
@@ -1432,8 +1435,8 @@
         <label class="toggle"><input type="checkbox" id="set-auto" ${state.settings.autoOnline ? 'checked' : ''}> Ejecutar al abrir cada correo</label>
         <div>
           <label class="toggle field">Clave de Safe Browsing
-            <input type="password" id="set-sbkey" value="${esc(state.settings.sbKey || '')}" placeholder="${configSbKey() ? 'usando config.js' : 'opcional'}" autocomplete="off" spellcheck="false"></label>
-          <p class="muted settings-hint">Clave de API de Google Cloud con la Safe Browsing API activada. Se guarda sólo en este navegador; si se deja vacía, se usa la de <code>config.js</code>.</p>
+            <input type="password" id="set-sbkey" value="${esc(state.settings.sbKey || '')}" placeholder="${configSbKey() ? 'usando config.js' : sbProxy() ? 'usando la del servidor' : 'opcional'}" autocomplete="off" spellcheck="false"></label>
+          <p class="muted settings-hint">Clave de API de Google Cloud con la Safe Browsing API activada. Se guarda sólo en este navegador; si se deja vacía, se usa la de <code>config.js</code> o, en la versión publicada, la del servidor.</p>
         </div>
       </div>
     </details>`;
@@ -1910,7 +1913,7 @@
       if (e.target.matches('[data-file-input]')) { loadFiles([...e.target.files]); e.target.value = ''; return; }
       if (e.target.id === 'set-provider') { state.settings.provider = e.target.value; Online.setProvider(e.target.value); saveSettings(); return; }
       if (e.target.id === 'set-auto') { state.settings.autoOnline = e.target.checked; saveSettings(); return; }
-      if (e.target.id === 'set-sbkey') { state.settings.sbKey = e.target.value.trim(); saveSettings(); toast(state.settings.sbKey ? 'Clave guardada: repite las comprobaciones para consultar Safe Browsing' : configSbKey() ? 'Se usará la clave de config.js' : 'Safe Browsing desactivado'); return; }
+      if (e.target.id === 'set-sbkey') { state.settings.sbKey = e.target.value.trim(); saveSettings(); toast(state.settings.sbKey ? 'Clave guardada: repite las comprobaciones para consultar Safe Browsing' : configSbKey() ? 'Se usará la clave de config.js' : sbProxy() ? 'Se usará la clave del servidor' : 'Safe Browsing desactivado'); return; }
       if (e.target.id === 'set-defang') { state.settings.defang = e.target.checked; saveSettings(); renderTabOnly(); return; }
       if (e.target.matches('input[type=checkbox][data-action]')) onAction(e.target, current());
     });

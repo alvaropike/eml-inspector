@@ -1,0 +1,56 @@
+# Publica la web en el hosting de Hostinger (eml.alvaropiquerastrenado.com) por FTP en cada push a main.
+#
+# Secrets del repositorio (Settings › Secrets and variables › Actions):
+#   GOOGLE_SAFE_BROWSER  clave de la Safe Browsing API; va a api/sb-key.php, que no se puede descargar
+#   FTP_SERVER           servidor FTP de hPanel (Archivos › Cuentas FTP), p. ej. ftp.alvaropiquerastrenado.com
+#   FTP_USERNAME         usuario de una cuenta FTP cuyo directorio sea la carpeta del subdominio
+#   FTP_PASSWORD         contraseña de esa cuenta
+# Variable opcional FTP_SERVER_DIR: carpeta de destino dentro de la cuenta FTP (por defecto, su raíz).
+
+name: Desplegar en Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configuración del sitio
+        env:
+          SB_KEY: ${{ secrets.GOOGLE_SAFE_BROWSER }}
+        run: |
+          printf "window.EML_CONFIG = {\n  safeBrowsingKey: '',\n  safeBrowsingProxy: 'api/safebrowsing.php',\n};\n" > config.js
+          if [ -z "$SB_KEY" ]; then
+            echo "::warning::Falta el secret GOOGLE_SAFE_BROWSER: Safe Browsing no funcionará en la web."
+          elif ! printf '%s' "$SB_KEY" | grep -Eq '^[A-Za-z0-9_-]+$'; then
+            echo "::error::GOOGLE_SAFE_BROWSER no parece una clave de API de Google."; exit 1
+          else
+            printf "<?php return '%s';\n" "$SB_KEY" > api/sb-key.php
+          fi
+
+      - name: Subir por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
+            iniciar.bat
+            config.example.js

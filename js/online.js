@@ -429,7 +429,7 @@
     };
   }
 
-  async function run(entry, { onUpdate, safeBrowsingKey, verifyAllDkim } = {}) {
+  async function run(entry, { onUpdate, safeBrowsingKey, safeBrowsingProxy, verifyAllDkim } = {}) {
     const email = entry.email;
     const res = { startedAt: new Date(), done: false, provider, dkim: null, domains: {}, ips: {}, errors: [], safeBrowsing: null };
     const update = () => onUpdate && onUpdate(res);
@@ -492,12 +492,12 @@
       })());
     }
 
-    if (safeBrowsingKey && global.SafeBrowsing) {
+    if ((safeBrowsingKey || safeBrowsingProxy) && global.SafeBrowsing) {
       tasks.push((async () => {
         const targets = safeBrowsingTargets(entry);
         if (!targets.length) { res.safeBrowsing = { skipped: 'sin enlaces ni dominios' }; update(); return; }
         const to = withTimeout(20000);
-        try { res.safeBrowsing = await global.SafeBrowsing.check(targets, safeBrowsingKey, { signal: to.signal }); }
+        try { res.safeBrowsing = await global.SafeBrowsing.check(targets, safeBrowsingKey, { signal: to.signal, proxy: safeBrowsingProxy }); }
         catch (e) { res.safeBrowsing = { error: e.message }; res.errors.push('Google Safe Browsing: ' + e.message); }
         finally { to.done(); }
         update();
